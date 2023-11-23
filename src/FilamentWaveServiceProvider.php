@@ -4,7 +4,6 @@ namespace Jeffgreco13\FilamentWave;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Jeffgreco13\FilamentWave\Commands\FilamentWaveCommand;
 
 class FilamentWaveServiceProvider extends PackageServiceProvider
 {
@@ -16,10 +15,10 @@ class FilamentWaveServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('filament-wave')
+            ->name('filament-wave');
             // ->hasConfigFile()
             // ->hasViews()
-            ->hasMigration('create_filament-wave_table');
+            // ->hasMigration('create_filament-wave_table');
             // ->hasCommand(FilamentWaveCommand::class);
     }
 
@@ -33,5 +32,11 @@ class FilamentWaveServiceProvider extends PackageServiceProvider
                 now()->addSecond()
             ),
         ], "{$this->package->shortName()}-customers-migration");
+
+        /*
+         *
+         * EVENTS & OBSERVERS
+         *
+         */
     }
 }
