@@ -8,10 +8,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Jeffgreco13\FilamentWave\Models\Customer;
+use Jeffgreco13\FilamentWave\Models\Product;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 
-class PullWaveCustomers implements ShouldQueue
+class PullWaveProducts implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,16 +29,18 @@ class PullWaveCustomers implements ShouldQueue
     public function handle(): void
     {
         $wave = new Wave();
-        $response = $wave->customers(['pageSize'=>200]);
+        $response = $wave->products(['pageSize'=>200]);
         do {
             foreach ($wave->getNodes() as $node) {
-                $model = Customer::firstOrNew(['id'=>$node->id]);
+                $model = Product::firstOrNew(['id'=>$node->id]);
                 $model->fill([
                     'name' => $node->name,
-                    'email' => $node->email,
-                    'first_name' => $node->firstName,
-                    'last_name' => $node->lastName,
-                    'phone' => $node->phone
+                    'description' => $node->description,
+                    'unit_price' => $node->unitPrice,
+                    'is_sold' => $node->isSold,
+                    'is_bought' => $node->isBought,
+                    'taxes' => $node->defaultSalesTaxes,
+                    'account' => $node->incomeAccount ?? $node->expenseAccount
                 ]);
                 $model->saveQuietly();
             }

@@ -8,8 +8,10 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
+use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Jeffgreco13\FilamentWave\Filament\Actions\ArchiveTableAction;
 use Jeffgreco13\FilamentWave\Filament\Resources\CustomerResource\Pages;
 use Jeffgreco13\FilamentWave\Filament\Resources\CustomerResource\RelationManagers;
 
@@ -73,14 +75,24 @@ class CustomerResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()->modalWidth(self::$modalWidth),
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\Action::make('archive')
-                        ->label(fn ($record) => $record->is_archived ? 'Restore' : 'Archive')
-                        ->color('warning')
-                        ->icon('heroicon-s-archive-box')
-                        ->action(function ($record) {
-                            $record->toggleArchive();
-                        }),
-                    Tables\Actions\DeleteAction::make(),
+                    ArchiveTableAction::make('archive'),
+                    Tables\Actions\DeleteAction::make()
+                        ->form([
+                            Forms\Components\Toggle::make('deleteWave')
+                                ->label('Attempt to delete this record in Wave as well.')
+                                ->onColor('success')
+                                ->onIcon('heroicon-m-check')
+                                ->default(false)
+                        ])
+                        ->using(function($data,$record){
+                            if (!data_get($data,'deleteWave',false)){
+                                $record->deleteQuietly();
+                            } else {
+                                $record->delete();
+                            }
+                            Notification::make()->success()->title('Deleted')->send();
+                        })
+
                 ]),
             ])
             ->bulkActions([

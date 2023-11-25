@@ -24,6 +24,7 @@ class FilamentWaveServiceProvider extends PackageServiceProvider
 
     public function bootingPackage()
     {
+        // CUSTOMERS
         $migrationFileName = 'create_wave_customers_table';
         $filePath = $this->package->basePath("/../database/migrations/{$migrationFileName}.php");
         $this->publishes([
@@ -32,6 +33,16 @@ class FilamentWaveServiceProvider extends PackageServiceProvider
                 now()->addSecond()
             ),
         ], "{$this->package->shortName()}-customers-migration");
+
+        // PRODUCTS
+        $migrationFileName = 'create_wave_products_table';
+        $filePath = $this->package->basePath("/../database/migrations/{$migrationFileName}.php");
+        $this->publishes([
+            $filePath => $this->generateMigrationName(
+                $migrationFileName,
+                now()->addSecond()
+            ),
+        ], "{$this->package->shortName()}-products-migration");
 
         /*
          *

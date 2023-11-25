@@ -15,7 +15,7 @@ trait InteractsWithWaveCustomers {
             $wave = new Wave();
             $input = [
                 "input" => [
-                    'name1' => $model->name,
+                    'name' => $model->name,
                     'firstName' => $model->first_name,
                     'lastName' => $model->last_name,
                     'email' => $model->email,
@@ -30,7 +30,7 @@ trait InteractsWithWaveCustomers {
             }
         });
 
-        static::updated(function (?Model $model) {
+        static::updating(function (?Model $model) {
             $wave = new Wave();
             $input = [
                 "input" => [
@@ -42,7 +42,6 @@ trait InteractsWithWaveCustomers {
                     'phone' => $model->phone
                 ]
             ];
-
             $response = $wave->customerPatch($input);
             // WIP: Can I do anything to alert of a failure?
         });
