@@ -15,12 +15,14 @@ trait CanBeArchived {
     }
     public function archive()
     {
-        $this->update(['is_archived' => true]);
+        $this->is_archived = true;
+        $this->saveQuietly();
     }
 
     public function unarchive()
     {
-        $this->update(['is_archived' => false]);
+        $this->is_archived = false;
+        $this->saveQuietly();
     }
 
     public function toggleArchive()

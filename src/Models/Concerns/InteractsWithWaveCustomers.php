@@ -19,7 +19,7 @@ trait InteractsWithWaveCustomers {
                     'firstName' => $model->first_name,
                     'lastName' => $model->last_name,
                     'email' => $model->email,
-                    'phone' => $model->phone
+                    'phone' => $model->phone,
                 ]
             ];
             $response = $wave->customerCreate($input);
@@ -43,7 +43,9 @@ trait InteractsWithWaveCustomers {
                 ]
             ];
             $response = $wave->customerPatch($input);
-            // WIP: Can I do anything to alert of a failure?
+            if (!$wave->didSucceed()){
+                return false;
+            }
         });
 
         static::deleting(function (?Model $model) {
@@ -53,8 +55,10 @@ trait InteractsWithWaveCustomers {
                     'id' => $model->id,
                 ]
             ];
-
             $response = $wave->customerDelete($input);
+            if (!$wave->didSucceed()) {
+                return false;
+            }
         });
     }
 

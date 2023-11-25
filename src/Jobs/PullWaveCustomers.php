@@ -30,6 +30,7 @@ class PullWaveCustomers implements ShouldQueue
     {
         $wave = new Wave();
         $response = $wave->customers(['pageSize'=>200]);
+        $presentWaveIds = [];
         do {
             foreach ($wave->getNodes() as $node) {
                 $model = Customer::firstOrNew(['id'=>$node->id]);
@@ -38,11 +39,29 @@ class PullWaveCustomers implements ShouldQueue
                     'email' => $node->email,
                     'first_name' => $node->firstName,
                     'last_name' => $node->lastName,
-                    'phone' => $node->phone
+                    'phone' => $node->phone,
+                    'mobile' => $node->mobile,
+                    'toll_free' => $node->tollFree,
+                    'website' => $node->website,
+                    'internal_notes' => $node->internalNotes,
+                    'address' => $node->address,
+                    'currency' => $node->currency,
+                    'meta' => array_merge($model->meta ?? [],[
+                        'outstandingAmount' => $node->outstandingAmount,
+                        'overdueAmount' => $node->overdueAmount,
+                        'shippingDetails' => $node->shippingDetails,
+                    ])
                 ]);
                 $model->saveQuietly();
+
+                // Add non-archived IDs to an array to enable archiving.
+                if (!$node->isArchived) {
+                    $presentWaveIds[] = $node->id;
+                }
             }
         } while($response = $wave->paginate());
+        // Once the loop is done, we can now archive those not present
+        Customer::whereNotIn('id', $presentWaveIds)->get()->each->archive();
 
     }
 }
