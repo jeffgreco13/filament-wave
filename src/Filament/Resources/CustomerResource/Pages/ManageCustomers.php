@@ -30,7 +30,7 @@ class ManageCustomers extends ManageRecords
                         PullWaveCustomers::dispatchSync();
                         Notification::make()->success()->title('Customers pulled successfully.')->send();
                     })
-            ])
+                ])
         ];
     }
 
