@@ -65,6 +65,46 @@ Next, add the `customers` method to the WavePlugin in your panel service provide
 WavePlugin::make()->customers()
 ```
 
+You can customize the Resource, Model:
+
+```php
+WavePlugin::make()
+    ->customers(
+        model:YourCustomerClass::class,
+        resource:YourCustomerResource::class
+    )
+```
+
+Or you can disable the Resource:
+
+```php
+WavePlugin::make()
+    ->customers(
+        resource:null
+    )
+```
+
+### Products
+
+Publish the products migration table using.
+
+```bash
+php artisan vendor:publish --tag="filament-wave-products-migration"
+php artisan migrate
+```
+
+Next, add the `products` method to the WavePlugin in your panel service provider:
+
+```php
+WavePlugin::make()->products()
+```
+
+See [Customers](#customers) for more customization options.
+
+### Currencies
+
+See [jeffgreco13/laravel-wave][laravel-wave] for interacting with Wave currencies.
+
 ## Testing
 
 ```bash

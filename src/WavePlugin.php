@@ -6,7 +6,9 @@ use Filament\Panel;
 use Filament\Contracts\Plugin;
 use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Model;
+use Jeffgreco13\FilamentWave\Models\Product;
 use Jeffgreco13\FilamentWave\Models\Customer;
+use Jeffgreco13\FilamentWave\Filament\Resources\ProductResource;
 use Jeffgreco13\FilamentWave\Filament\Resources\CustomerResource;
 
 class WavePlugin implements Plugin
@@ -14,6 +16,9 @@ class WavePlugin implements Plugin
     protected bool $hasCustomers = false;
     protected $customerResource;
     protected $customerModel;
+    protected bool $hasProducts = false;
+    protected $productResource;
+    protected $productModel;
 
 
     public static function make(): static
@@ -31,8 +36,12 @@ class WavePlugin implements Plugin
         $registeredResources = [];
         $registeredPages = [];
 
-        if ($this->hasCustomers){
+        if ($this->hasCustomers && !is_null($this->getCustomerResource())){
             $registeredResources[] = $this->getCustomerResource();
+        }
+
+        if ($this->hasProducts && !is_null($this->getProductResource())) {
+            $registeredResources[] = $this->getProductResource();
         }
 
         if (!empty($registeredResources)){
@@ -48,9 +57,14 @@ class WavePlugin implements Plugin
         //
     }
 
+    /*
+     *
+     * CUSTOMERS
+     *
+     */
     public function customers(
         bool $condition = true,
-        string $resource = CustomerResource::class,
+        ?string $resource = CustomerResource::class,
         string $model = Customer::class
     ): static
     {
@@ -70,5 +84,33 @@ class WavePlugin implements Plugin
     public function getCustomerModel()
     {
         return $this->customerModel;
+    }
+
+    /*
+     *
+     * PRODUCTS
+     *
+     */
+    public function products(
+        bool $condition = true,
+        ?string $resource = ProductResource::class,
+        string $model = Product::class
+    ): static {
+        $this->hasProducts = $condition;
+        $this->productResource = $resource;
+        $this->productModel = $model;
+        return $this;
+    }
+    public function hasProducts(): bool
+    {
+        return $this->hasProducts;
+    }
+    public function getProductResource()
+    {
+        return $this->productResource;
+    }
+    public function getProductModel()
+    {
+        return $this->productModel;
     }
 }
