@@ -33,24 +33,15 @@ class CustomerResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->label('Customer or Business Name')
-                    ->placeholder('Dunder Mifflin')
-                    ->default('AAA Test')
                     ->required(),
                 Forms\Components\Fieldset::make('Primary contact')
                 ->columns(2)
                 ->schema([
-                    Forms\Components\TextInput::make('first_name')
-                        ->default('Mike')
-                        ->placeholder('Michael'),
-                    Forms\Components\TextInput::make('last_name')
-                        ->default('Jones')
-                        ->placeholder('Scott'),
+                    Forms\Components\TextInput::make('first_name'),
+                    Forms\Components\TextInput::make('last_name'),
                     Forms\Components\TextInput::make('email')
-                        ->default('mike.jones@gmail.com')
-                        ->placeholder('mscott@dundermifflin.com')
                         ->email(),
-                    Forms\Components\TextInput::make('phone')
-                        ->default('705-255-1775'),
+                    Forms\Components\TextInput::make('phone'),
                 ]),
             ]);
     }
