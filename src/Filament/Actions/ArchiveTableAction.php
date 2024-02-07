@@ -8,7 +8,7 @@ class ArchiveTableAction extends Action
 {
     public static function make(?string $name = null): static
     {
-        return parent::make($name)
+        return parent::make($name ?? 'archive')
             ->label(fn ($record) => $record->is_archived ? 'Restore' : 'Archive')
             ->color('warning')
             ->icon('heroicon-s-archive-box')
