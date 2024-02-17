@@ -46,7 +46,7 @@ class PullWaveCustomers implements ShouldQueue
                     'internal_notes' => $node->internalNotes,
                     'address' => $node->address,
                     'currency' => $node->currency,
-                    'meta' => array_merge($model->meta ?? [],[
+                    'meta' => array_merge($model->meta?->toArray() ?? [],[
                         'outstandingAmount' => $node->outstandingAmount,
                         'overdueAmount' => $node->overdueAmount,
                         'shippingDetails' => $node->shippingDetails,
